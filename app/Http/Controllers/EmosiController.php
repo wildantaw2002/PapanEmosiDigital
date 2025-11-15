@@ -24,11 +24,11 @@ class EmosiController extends Controller
         return response()->json(['message' => 'Data emosi tersimpan']);
     }
 
-    // Tampilkan semua data untuk guru
+    // Tampilkan semua data untuk guru (API JSON)
     public function index()
     {
         $data = Emosi::latest()->get();
-        return view('guru.dashboard', compact('data'));
+        return response()->json($data);
     }
 
     // Statistik warna (untuk grafik)

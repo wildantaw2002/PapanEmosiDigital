@@ -29,19 +29,7 @@
           </tr>
         </thead>
         <tbody id="table-body" style="text-align: center;">
-          <!-- Dummy Data -->
-          <tr style="border-top: 1px solid #e5e7eb;">
-            <td style="padding-top: 0.5rem; padding-bottom: 0.5rem; padding-left: 0.75rem; padding-right: 0.75rem;">Budi</td>
-            <td style="padding-top: 0.5rem; padding-bottom: 0.5rem; padding-left: 0.75rem; padding-right: 0.75rem; font-size: 1.5rem;">☺️</td>
-            <td style="padding-top: 0.5rem; padding-bottom: 0.5rem; padding-left: 0.75rem; padding-right: 0.75rem;">Senang</td>
-            <td style="padding-top: 0.5rem; padding-bottom: 0.5rem; padding-left: 0.75rem; padding-right: 0.75rem;">5 menit lalu</td>
-          </tr>
-          <tr style="border-top: 1px solid #e5e7eb;">
-            <td style="padding-top: 0.5rem; padding-bottom: 0.5rem; padding-left: 0.75rem; padding-right: 0.75rem;">Siti</td>
-            <td style="padding-top: 0.5rem; padding-bottom: 0.5rem; padding-left: 0.75rem; padding-right: 0.75rem; font-size: 1.5rem;">😡</td>
-            <td style="padding-top: 0.5rem; padding-bottom: 0.5rem; padding-left: 0.75rem; padding-right: 0.75rem;">Marah</td>
-            <td style="padding-top: 0.5rem; padding-bottom: 0.5rem; padding-left: 0.75rem; padding-right: 0.75rem;">10 menit lalu</td>
-          </tr>
+          <!-- Data akan dimuat dari API -->
         </tbody>
       </table>
     </div>
@@ -55,25 +43,6 @@
   </div>
 
   <script>
-    // Dummy data chart
-    const dataChart = [
-      { warna: 'Kuning', total: 5 },
-      { warna: 'Biru', total: 2 },
-      { warna: 'Merah', total: 3 },
-      { warna: 'Hijau', total: 1 },
-      { warna: 'Abu', total: 0 }
-    ];
-
-    const totalSum = dataChart.reduce((s, d) => s + d.total, 0);
-
-    const colorMap = {
-      'Kuning': '#facc15',
-      'Biru': '#3b82f6',
-      'Merah': '#ef4444',
-      'Hijau': '#22c55e',
-      'Abu': '#6b7280'
-    };
-
     const emojiMap = {
       'Kuning': '☺️',
       'Biru': '🥹',
@@ -90,48 +59,111 @@
       'Abu': 'Cemas'
     };
 
-    const labelsWithPct = dataChart.map(d => {
-      const pct = totalSum > 0 ? Math.round((d.total / totalSum) * 100) : 0;
-      return `${emojiMap[d.warna] || ''} ${descMap[d.warna] || d.warna} (${pct}%)`;
-    });
+    // Load table data
+    fetch('/emosi', {
+      credentials: 'same-origin',
+      headers: { 'Accept': 'application/json' }
+    })
+    .then(response => {
+      if (!response.ok) throw new Error('Failed to fetch data');
+      return response.json();
+    })
+    .then(dataList => {
+      const tbody = document.getElementById('table-body');
+      tbody.innerHTML = ''; // Clear existing rows
 
-    const totals = dataChart.map(d => d.total);
-    const bgColors = dataChart.map(d => colorMap[d.warna] || '#6b7280');
+      if (dataList.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="4" style="padding: 1rem; color: #999;">Tidak ada data</td></tr>';
+        return;
+      }
 
-    const ctx = document.getElementById('chartEmosi');
-    // Ensure Chart is available (Chart.js CDN added to <head>)
-    if (typeof Chart !== 'undefined') {
-      new Chart(ctx, {
-        type: 'pie',
-        data: {
-          labels: labelsWithPct,
-          datasets: [{
-            data: totals,
-            backgroundColor: bgColors,
-            borderColor: '#ffffff',
-            borderWidth: 2
-          }]
-        },
-        options: {
-          responsive: true,
-          plugins: {
-            legend: { position: 'bottom' },
-            tooltip: {
-              callbacks: {
-                label: function(context) {
-                  const idx = context.dataIndex;
-                  const value = context.dataset.data[idx];
-                  const pct = totalSum > 0 ? ((value / totalSum) * 100).toFixed(1) : 0;
-                  return `${context.label.replace(/ \(.*\)$/, '')}: ${value} (${pct}%)`;
+      dataList.forEach(item => {
+        const row = document.createElement('tr');
+        row.style.borderTop = '1px solid #e5e7eb';
+
+        const emoji = emojiMap[item.emosi] || '';
+        const desc = descMap[item.emosi] || item.emosi;
+
+        row.innerHTML = `
+          <td style="padding-top: 0.5rem; padding-bottom: 0.5rem; padding-left: 0.75rem; padding-right: 0.75rem;">${item.nama}</td>
+          <td style="padding-top: 0.5rem; padding-bottom: 0.5rem; padding-left: 0.75rem; padding-right: 0.75rem; font-size: 1.5rem;">${emoji}</td>
+          <td style="padding-top: 0.5rem; padding-bottom: 0.5rem; padding-left: 0.75rem; padding-right: 0.75rem;">${desc}</td>
+          <td style="padding-top: 0.5rem; padding-bottom: 0.5rem; padding-left: 0.75rem; padding-right: 0.75rem;">Baru</td>
+        `;
+
+        tbody.appendChild(row);
+      });
+    })
+    .catch(error => console.error('Error loading table data:', error));
+
+    // Color, emoji, and description mappings
+    const colorMap = {
+      'Kuning': '#facc15',
+      'Biru': '#3b82f6',
+      'Merah': '#ef4444',
+      'Hijau': '#22c55e',
+      'Abu': '#6b7280'
+    };
+
+    // Fetch actual data from API
+    fetch('/emosi/statistik', {
+      credentials: 'same-origin',
+      headers: { 'Accept': 'application/json' }
+    })
+    .then(response => {
+      if (!response.ok) throw new Error('Failed to fetch statistics');
+      return response.json();
+    })
+    .then(dataChart => {
+      // Calculate total
+      const totalSum = dataChart.reduce((s, d) => s + d.total, 0);
+
+      // Build labels with percentage
+      const labelsWithPct = dataChart.map(d => {
+        const pct = totalSum > 0 ? Math.round((d.total / totalSum) * 100) : 0;
+        return `${emojiMap[d.warna] || ''} ${descMap[d.warna] || d.warna} (${pct}%)`;
+      });
+
+      // Extract totals and colors
+      const totals = dataChart.map(d => d.total);
+      const bgColors = dataChart.map(d => colorMap[d.warna] || '#6b7280');
+
+      // Create chart
+      const ctx = document.getElementById('chartEmosi');
+      if (typeof Chart !== 'undefined') {
+        new Chart(ctx, {
+          type: 'pie',
+          data: {
+            labels: labelsWithPct,
+            datasets: [{
+              data: totals,
+              backgroundColor: bgColors,
+              borderColor: '#ffffff',
+              borderWidth: 2
+            }]
+          },
+          options: {
+            responsive: true,
+            plugins: {
+              legend: { position: 'bottom' },
+              tooltip: {
+                callbacks: {
+                  label: function(context) {
+                    const idx = context.dataIndex;
+                    const value = context.dataset.data[idx];
+                    const pct = totalSum > 0 ? ((value / totalSum) * 100).toFixed(1) : 0;
+                    return `${context.label.replace(/ \(.*\)$/, '')}: ${value} (${pct}%)`;
+                  }
                 }
               }
             }
           }
-        }
-      });
-    } else {
-      console.error("Chart.js library not loaded.");
-    }
+        });
+      } else {
+        console.error("Chart.js library not loaded.");
+      }
+    })
+    .catch(error => console.error('Error loading chart data:', error));
   </script>
 </body>
 </html>
