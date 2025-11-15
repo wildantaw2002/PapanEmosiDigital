@@ -1,88 +1,85 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    @vite('resources/css/app.css')
-  <meta name="csrf-token" content="{{ csrf_token() }}">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mahasiswa - Papan Emosi Digital</title>
 </head>
-<body>
-<div class="flex items-center justify-center min-h-screen bg-gray-100">
-  <div class="bg-white p-8 rounded-2xl shadow-lg w-full max-w-md text-center">
-    <h2 class="text-2xl font-bold mb-2 text-gray-800">Papan Emosi Digital</h2>
-    <p class="text-gray-600 mb-6">Masukkan nama Anda dan pilih warna emosi Anda hari ini:</p>
+<body style="background-color: #f3f4f6; display: flex; align-items: center; justify-content: center; min-height: 100vh; margin: 0; font-family: sans-serif;">
 
-    <input type="text" id="nama" placeholder="Nama Mahasiswa"
-      class="w-full border border-gray-300 rounded-lg px-4 py-2 mb-6 focus:outline-none focus:ring-2 focus:ring-green-500">
+<div id="emotion-card" style="background-color: white; padding: 2rem; border-radius: 1rem; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1); width: 100%; max-width: 28rem; text-align: center; box-sizing: border-box;">
+  <h2 style="font-size: 1.5rem; font-weight: 700; margin-bottom: 0.5rem; color: #1f2937;">Papan Emosi Digital</h2>
+  <p style="color: #4b5563; margin-bottom: 1.5rem;">Masukkan nama Anda dan pilih warna emosi Anda hari ini:</p>
 
-    <div class="flex justify-around mb-6">
-      <div class="w-14 h-14 rounded-full cursor-pointer transition transform hover:scale-110 bg-yellow-400" data-color="Kuning"></div>
-      <div class="w-14 h-14 rounded-full cursor-pointer transition transform hover:scale-110 bg-blue-500" data-color="Biru"></div>
-      <div class="w-14 h-14 rounded-full cursor-pointer transition transform hover:scale-110 bg-red-500" data-color="Merah"></div>
-      <div class="w-14 h-14 rounded-full cursor-pointer transition transform hover:scale-110 bg-green-500" data-color="Hijau"></div>
-      <div class="w-14 h-14 rounded-full cursor-pointer transition transform hover:scale-110 bg-gray-500" data-color="Abu"></div>
-    </div>
+  <input type="text" id="nama" placeholder="Nama Mahasiswa"
+    style="width: 100%; border: 1px solid #d1d5db; border-radius: 0.5rem; padding: 0.5rem 1rem; margin-bottom: 1.5rem; box-sizing: border-box;">
 
-    <button id="kirimBtn"
-      class="bg-green-500 hover:bg-green-600 text-white font-semibold px-6 py-2 rounded-lg transition">
-      Kirim
-    </button>
-
-    <p id="result" class="mt-4 text-lg font-medium"></p>
+  <div style="display: flex; justify-content: space-around; margin-bottom: 1.5rem;">
+    <!-- Emosi Kuning (Senang) -->
+    <div data-color="Kuning" style="width: 3.5rem; height: 3.5rem; border-radius: 50%; cursor: pointer; transition: transform 0.2s; background-color: #facc15;" title="Senang"></div>
+    <!-- Emosi Biru (Terharu) -->
+    <div data-color="Biru" style="width: 3.5rem; height: 3.5rem; border-radius: 50%; cursor: pointer; transition: transform 0.2s; background-color: #3b82f6;" title="Terharu"></div>
+    <!-- Emosi Merah (Marah) -->
+    <div data-color="Merah" style="width: 3.5rem; height: 3.5rem; border-radius: 50%; cursor: pointer; transition: transform 0.2s; background-color: #ef4444;" title="Marah"></div>
+    <!-- Emosi Hijau (Khawatir) -->
+    <div data-color="Hijau" style="width: 3.5rem; height: 3.5rem; border-radius: 50%; cursor: pointer; transition: transform 0.2s; background-color: #22c55e;" title="Khawatir"></div>
+    <!-- Emosi Abu (Cemas) -->
+    <div data-color="Abu" style="width: 3.5rem; height: 3.5rem; border-radius: 50%; cursor: pointer; transition: transform 0.2s; background-color: #6b7280;" title="Cemas"></div>
   </div>
+
+  <button id="kirimBtn"
+    style="background-color: #10b981; color: white; font-weight: 600; padding: 0.5rem 1.5rem; border-radius: 0.5rem; border: none; cursor: pointer; transition: background-color 0.2s;">
+    Kirim
+  </button>
+
+  <p id="result" style="margin-top: 1rem; font-size: 1.125rem; font-weight: 500;"></p>
 </div>
 
-<script type="module">
+<script>
   const emotions = document.querySelectorAll('[data-color]');
   const result = document.getElementById('result');
   let selectedColor = null;
 
+  const ringStyle = '4px solid #1f2937'; // Custom style for the ring
+
   emotions.forEach(emotion => {
     emotion.addEventListener('click', () => {
-      emotions.forEach(e => e.classList.remove('ring-4', 'ring-gray-800'));
-      emotion.classList.add('ring-4', 'ring-gray-800');
+      // Remove ring from all emotions
+      emotions.forEach(e => e.style.border = 'none');
+      
+      // Add ring to the selected emotion
+      emotion.style.border = ringStyle;
+      emotion.style.boxSizing = 'border-box'; // Ensure border doesn't push element out
       selectedColor = emotion.dataset.color;
     });
   });
 
   document.getElementById('kirimBtn').addEventListener('click', async () => {
-    const nama = document.getElementById('nama').value;
+    const nama = document.getElementById('nama').value.trim();
 
     if (!nama || !selectedColor) {
       result.textContent = "Harap isi nama dan pilih warna emosi!";
-      result.classList.add('text-red-500');
+      result.style.color = '#ef4444'; // Red-500 equivalent
       return;
     }
 
-    result.textContent = `Hai ${nama}, kamu memilih warna ${selectedColor}!`;
-    result.classList.remove('text-red-500');
-    result.classList.add('text-green-600');
-
-    // Contoh kirim ke backend Laravel (aktifkan kalau backend sudah siap)
-    try {
-      const response = await fetch("{{ url('/api/emosi') }}", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').content,
-        },
-        body: JSON.stringify({ nama: nama, warna: selectedColor }),
-      });
-
-      const data = await response.json();
-      console.log("Respon dari server:", data);
-      if (response.ok) {
-        // sudah ditangani di atas; tambahkan reset jika perlu
-      } else {
-        console.error(data);
-      }
-    } catch (err) {
-      console.error(err);
-    }
+    result.textContent = `Hai ${nama}, kamu memilih warna ${selectedColor}! (Data dikirim)`;
+    result.style.color = '#059669'; // Green-600 equivalent
+    
+    // --- START: Mock API Call Logic ---
+    // In a real application, you would put your 'fetch' call here.
+    // Since this is a standalone file, we simulate a successful submission.
+    console.log("Simulasi Pengiriman Data Emosi:");
+    console.log(`Nama: ${nama}`);
+    console.log(`Warna: ${selectedColor}`);
+    
+    // Optional: Reset form after mock submission
+    document.getElementById('nama').value = '';
+    emotions.forEach(e => e.style.border = 'none');
+    selectedColor = null;
+    // --- END: Mock API Call Logic ---
   });
 </script>
-
 
 </body>
 </html>

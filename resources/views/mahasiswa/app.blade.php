@@ -1,110 +1,142 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Papan Emosi Digital</title>
-    @vite('resources/css/app.css')
-    <meta name="csrf-token" content="{{ csrf_token() }}">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mahasiswa - Papan Emosi Digital</title>
 </head>
-<body class="bg-gray-100 flex items-center justify-center min-h-screen">
+<body style="background-color: #f3f4f6; display: flex; align-items: center; justify-content: center; min-height: 100vh; margin: 0; font-family: sans-serif;">
 
-  <div class="bg-white p-8 rounded-2xl shadow-lg w-full max-w-md text-center">
-    <h2 class="text-2xl font-bold mb-2 text-gray-800">Papan Emosi Digital</h2>
-    <p class="text-gray-600 mb-6">Masukkan nama Anda dan pilih warna emosi Anda hari ini:</p>
+<div id="emotion-card" style="background-color: white; padding: 2rem; border-radius: 1rem; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1); width: 100%; max-width: 28rem; text-align: center; box-sizing: border-box;">
+  <h2 style="font-size: 1.5rem; font-weight: 700; margin-bottom: 0.5rem; color: #1f2937;">Papan Emosi Digital</h2>
+  <p style="color: #4b5563; margin-bottom: 1.5rem;">Masukkan nama Anda dan pilih warna emosi Anda hari ini:</p>
 
-    <input type="text" id="nama" placeholder="Nama Mahasiswa"
-      class="w-full border border-gray-300 rounded-lg px-4 py-2 mb-6 focus:outline-none focus:ring-2 focus:ring-green-500">
+  <input type="text" id="nama" placeholder="Nama Mahasiswa"
+    style="width: 100%; border: 1px solid #d1d5db; border-radius: 0.5rem; padding: 0.5rem 1rem; margin-bottom: 1.5rem; box-sizing: border-box;">
 
-    <div class="flex justify-around mb-6">
-      <div class="flex flex-col items-center">
-        <div class="w-14 h-14 rounded-full cursor-pointer transition transform hover:scale-110 flex items-center justify-center text-2xl border" data-color="Kuning" title="Senang">☺️</div>
-        <small class="mt-1 text-xs">Senang</small>
+  <div style="display: flex; justify-content: space-around; margin-bottom: 1.5rem;">
+    
+    <!-- Emosi Senang -->
+    <div style="display: flex; flex-direction: column; align-items: center;">
+      <div data-color="Kuning" title="Senang"
+        style="width: 3.5rem; height: 3.5rem; border-radius: 50%; cursor: pointer; transition: transform 0.2s; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; border: 1px solid #d1d5db; background-color: #facc15;">
+        ☺️
       </div>
-      <div class="flex flex-col items-center">
-        <div class="w-14 h-14 rounded-full cursor-pointer transition transform hover:scale-110 flex items-center justify-center text-2xl border" data-color="Biru" title="Terharu">🥹</div>
-        <small class="mt-1 text-xs">Terharu</small>
-      </div>
-      <div class="flex flex-col items-center">
-        <div class="w-14 h-14 rounded-full cursor-pointer transition transform hover:scale-110 flex items-center justify-center text-2xl border" data-color="Merah" title="Marah">😡</div>
-        <small class="mt-1 text-xs">Marah</small>
-      </div>
-      <div class="flex flex-col items-center">
-        <div class="w-14 h-14 rounded-full cursor-pointer transition transform hover:scale-110 flex items-center justify-center text-2xl border" data-color="Hijau" title="Khawatir">😟</div>
-        <small class="mt-1 text-xs">Khawatir</small>
-      </div>
-      <div class="flex flex-col items-center">
-        <div class="w-14 h-14 rounded-full cursor-pointer transition transform hover:scale-110 flex items-center justify-center text-2xl border" data-color="Abu" title="Cemas">😰</div>
-        <small class="mt-1 text-xs">Cemas</small>
-      </div>
+      <small style="margin-top: 0.25rem; font-size: 0.75rem;">Senang</small>
     </div>
 
-    <button id="kirimBtn"
-      class="bg-green-500 hover:bg-green-600 text-white font-semibold px-6 py-2 rounded-lg transition">
-      Kirim
-    </button>
+    <!-- Emosi Terharu -->
+    <div style="display: flex; flex-direction: column; align-items: center;">
+      <div data-color="Biru" title="Terharu"
+        style="width: 3.5rem; height: 3.5rem; border-radius: 50%; cursor: pointer; transition: transform 0.2s; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; border: 1px solid #d1d5db; background-color: #3b82f6;">
+        🥹
+      </div>
+      <small style="margin-top: 0.25rem; font-size: 0.75rem;">Terharu</small>
+    </div>
 
-    <p id="result" class="mt-4 text-lg font-medium"></p>
+    <!-- Emosi Marah -->
+    <div style="display: flex; flex-direction: column; align-items: center;">
+      <div data-color="Merah" title="Marah"
+        style="width: 3.5rem; height: 3.5rem; border-radius: 50%; cursor: pointer; transition: transform 0.2s; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; border: 1px solid #d1d5db; background-color: #ef4444;">
+        😡
+      </div>
+      <small style="margin-top: 0.25rem; font-size: 0.75rem;">Marah</small>
+    </div>
+
+    <!-- Emosi Khawatir -->
+    <div style="display: flex; flex-direction: column; align-items: center;">
+      <div data-color="Hijau" title="Khawatir"
+        style="width: 3.5rem; height: 3.5rem; border-radius: 50%; cursor: pointer; transition: transform 0.2s; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; border: 1px solid #d1d5db; background-color: #22c55e;">
+        😟
+      </div>
+      <small style="margin-top: 0.25rem; font-size: 0.75rem;">Khawatir</small>
+    </div>
+
+    <!-- Emosi Cemas -->
+    <div style="display: flex; flex-direction: column; align-items: center;">
+      <div data-color="Abu" title="Cemas"
+        style="width: 3.5rem; height: 3.5rem; border-radius: 50%; cursor: pointer; transition: transform 0.2s; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; border: 1px solid #d1d5db; background-color: #6b7280;">
+        😰
+      </div>
+      <small style="margin-top: 0.25rem; font-size: 0.75rem;">Cemas</small>
+    </div>
   </div>
 
-  <script type="module">
-    const emotions = document.querySelectorAll('[data-color]');
-    const result = document.getElementById('result');
-    let selectedColor = null;
+  <!-- Button Container to hold both buttons, stacked and centered -->
+  <div style="display: flex; flex-direction: column; gap: 0.75rem; align-items: center;">
+      <button id="kirimBtn"
+        style="background-color: #10b981; color: white; font-weight: 600; padding: 0.5rem 1.5rem; border-radius: 0.5rem; border: none; cursor: pointer; transition: background-color 0.2s; min-width: 10rem;">
+        Kirim
+      </button>
 
-    // Highlight warna yang dipilih
-    emotions.forEach(emotion => {
-      emotion.addEventListener('click', () => {
-        emotions.forEach(e => e.classList.remove('ring-4', 'ring-gray-800'));
-        emotion.classList.add('ring-4', 'ring-gray-800');
-        selectedColor = emotion.dataset.color;
-      });
+      <button id="dashboardBtn"
+        style="background-color: #3b82f6; color: white; font-weight: 600; padding: 0.5rem 1.5rem; border-radius: 0.5rem; border: none; cursor: pointer; transition: background-color 0.2s; min-width: 10rem;">
+        Ke Dashboard Guru
+      </button>
+  </div>
+
+  <p id="result" style="margin-top: 1rem; font-size: 1.125rem; font-weight: 500;"></p>
+</div>
+
+<script>
+  const emotions = document.querySelectorAll('[data-color]');
+  const result = document.getElementById('result');
+  let selectedColor = null;
+
+  const ringStyle = '4px solid #1f2937'; // Border style for selected emotion
+  const defaultBorderStyle = '1px solid #d1d5db';
+
+  // Highlight warna yang dipilih
+  emotions.forEach(emotion => {
+    emotion.addEventListener('click', () => {
+      // Remove ring from all emotions
+      emotions.forEach(e => e.style.border = defaultBorderStyle);
+      
+      // Add ring to the selected emotion
+      emotion.style.border = ringStyle;
+      emotion.style.boxSizing = 'border-box';
+      selectedColor = emotion.dataset.color;
     });
+  });
 
-    // Tombol kirim
-    document.getElementById('kirimBtn').addEventListener('click', async () => {
-      const nama = document.getElementById('nama').value.trim();
+  // Tombol kirim
+  document.getElementById('kirimBtn').addEventListener('click', async () => {
+    const nama = document.getElementById('nama').value.trim();
 
-      if (!nama || !selectedColor) {
-        result.textContent = "Harap isi nama dan pilih warna emosi!";
-        result.classList.remove('text-green-600');
-        result.classList.add('text-red-500');
-        return;
-      }
+    if (!nama || !selectedColor) {
+      result.textContent = "Harap isi nama dan pilih warna emosi!";
+      result.style.color = '#ef4444'; // Red-500 equivalent
+      return;
+    }
 
-      try {
-        const response = await fetch("{{ url('/api/emosi') }}", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').content,
-          },
-          body: JSON.stringify({
-            nama: nama,
-            warna: selectedColor,
-          }),
-        });
+    // --- START: Mock Submission Logic (Replaces API call) ---
+    console.log("Simulasi Pengiriman Data Emosi:");
+    console.log(`Nama: ${nama}`);
+    console.log(`Warna: ${selectedColor}`);
+    
+    // Simulate successful response
+    result.textContent = `Terima kasih, ${nama}! Kamu memilih warna ${selectedColor}. (Simulasi berhasil)`;
+    result.style.color = '#059669'; // Green-600 equivalent
+    
+    // Reset form
+    document.getElementById('nama').value = "";
+    emotions.forEach(e => e.style.border = defaultBorderStyle);
+    selectedColor = null;
 
-        const data = await response.json();
-        console.log("Respon dari server:", data);
+    // --- END: Mock Submission Logic ---
+  });
 
-        if (response.ok) {
-          result.textContent = `Terima kasih, ${nama}! Kamu memilih warna ${selectedColor}.`;
-          result.classList.remove('text-red-500');
-          result.classList.add('text-green-600');
-          document.getElementById('nama').value = "";
-          emotions.forEach(e => e.classList.remove('ring-4', 'ring-gray-800'));
-          selectedColor = null;
-        } else {
-          throw new Error(data.message || "Gagal menyimpan data.");
-        }
-      } catch (error) {
-        console.error(error);
-        result.textContent = "Terjadi kesalahan saat mengirim data.";
-        result.classList.add('text-red-500');
-      }
-    });
-  </script>
+  // Tombol ke Dashboard Guru (DIFIX untuk navigasi ke path Laravel)
+  const dashboardBtn = document.getElementById('dashboardBtn');
+  dashboardBtn.addEventListener('click', () => {
+    // Navigasi yang sebenarnya: Mengarahkan ke path /guru/dashboard
+    window.location.href = '/guru/dashboard';
+    
+    // Memberikan pesan visual sebelum navigasi
+    result.textContent = "Mengarahkan ke Dashboard Guru (/guru/dashboard)...";
+    result.style.color = '#3b82f6'; 
+  });
+</script>
 
 </body>
 </html>
