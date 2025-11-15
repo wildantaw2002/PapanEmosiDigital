@@ -8,8 +8,8 @@ use Illuminate\Support\Facades\DB;
 
 class EmosiController extends Controller
 {
-    // Simpan data emosi dari mahasiswa
-    public function store(Request $request)
+    // Simpan data emosi dari form submission (tradisional)
+    public function submit(Request $request)
     {
         $request->validate([
             'nama' => 'required|string|max:100',
@@ -21,7 +21,7 @@ class EmosiController extends Controller
             'emosi' => $request->warna
         ]);
 
-        return response()->json(['message' => 'Data emosi tersimpan']);
+        return redirect('/')->with('success', 'Terima kasih ' . $request->nama . '! Emosi Anda telah tersimpan.');
     }
 
     // Tampilkan semua data untuk guru (API JSON)
